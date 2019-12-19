@@ -1,2 +1,3 @@
 class Post < ApplicationRecord
-end
+    validates :content, presence: true, length: { maximum: 100 }
+  end
