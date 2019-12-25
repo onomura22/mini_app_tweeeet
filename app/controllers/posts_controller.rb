@@ -1,11 +1,18 @@
 class PostsController < ApplicationController
 
   def new
+    unless @current_user
+      flash[:notice] = "ログインしてください"
+      redirect_to login_url
+    end
     @post = Post.new
   end
 
   def create
-    @post = Post.new(content: params[:content])
+    @post = Post.new(
+      content: params[:content],
+      user_id: @current_user.id,
+    )
     if @post.save
       flash[:notice] = "投稿しました！"
       redirect_to posts_index_url
@@ -20,6 +27,7 @@ class PostsController < ApplicationController
 
   def show
     @post = Post.find(params[:id])
+    @user = User.find(@post.user_id)
   end
 
   def edit
